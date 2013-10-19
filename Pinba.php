@@ -170,8 +170,7 @@ class Pinba extends CApplicationComponent {
         
         // Translating all to real API if enabled
         if(method_exists($this->_internalCaller, $name)) {
-            Yii::log("Calling: $name with " . print_r($parameters, true));
-
+            Yii::trace("Calling to Pinba API: $name with " . print_r($parameters, true), 'ext.yii-pinba');
             if($this->enabled) { 
                     try {
                         // Calling real function from PinbaAPI class
