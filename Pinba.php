@@ -11,13 +11,28 @@
 
 /**
  * Simple internal class that incapsulates pinba core functions
+ * 
  * @author Last G <last-g@skbkontur.ru>
  */
 class PinbaApi extends CComponent {
+    /**
+     * Creates and starts new timer
+     * 
+     * @param array $tags for timer
+     * @param array $data for timer
+     * @return int timer resurse id
+     */
     public function timerStart(array $tags, array $data=array())
     {
         return pinba_timer_start($tags, $data);
     }
+    
+    /**
+     * Stops timer
+     * 
+     * @param int $timer resourse id
+     * @return bool
+     */
     public function timerStop($timer)
     {
         return pinba_timer_stop($timer);
@@ -46,10 +61,18 @@ class PinbaApi extends CComponent {
         return pinba_timer_get_info($timer);
     }
     
+    /**
+     * Stops all timers
+     * @return bool
+     */
     public function timersStop() {
         return pinba_timers_stop();
     }
-    
+    /**
+     * Gets info about pinba
+     * 
+     * @return array
+     */
     public function getInfo() {
         return pinba_get_info();
     }
@@ -75,6 +98,11 @@ class PinbaApi extends CComponent {
 }
  
 
+/**
+ * Pinba extenstion component
+ * You should use it for configuring Pinba and accessing API
+ * Do not use PinbaAPI class to invoke method, coz not all systems have pinba installed
+ */
 class Pinba extends CApplicationComponent {
     
     private $_internalCaller;
@@ -88,11 +116,19 @@ class Pinba extends CApplicationComponent {
     public $schema          = null;
 
 
+    /**
+     * Check if Pinba module and extension ebabled
+     * 
+     * @return bool true if enabled
+     */
     public function getEnabled() {
         return (extension_loaded("pinba") && $this->on);
     }
     
 
+    /**
+     * Initianizes Pinba component class
+     */
     public function init() {
         parent::init();
         $this->_internalCaller = new PinbaApi();
@@ -123,6 +159,13 @@ class Pinba extends CApplicationComponent {
         }
     }
     
+    /**
+     * Proxing all calls to Pinba class to the PinbaAPI class
+     * 
+     * @param string $name of function that was called
+     * @param array $parameters of function call
+     * @return type
+     */
     public function __call($name, $parameters) {
         
         // Translating all to real API if enabled
@@ -131,10 +174,15 @@ class Pinba extends CApplicationComponent {
 
             if($this->enabled) { 
                     try {
+                        // Calling real function from PinbaAPI class
                         return call_user_func_array(array($this->_internalCaller, $name),$parameters);
                     } catch (CException $ex) {
                          // Pass (that was no such method)
                     }
+            }
+            else {
+                // Return null if we just emulating call to api
+                return null;
             }
         }
         else
