@@ -142,7 +142,7 @@ class Pinba extends CApplicationComponent {
             }
             else {
                 $path = Yii::app()->urlManager->parseUrl(Yii::app()->request);
-                $this->setScriptName($path);
+                $this->setScriptName('/' . $path);
             }
         }
         if(! is_null($this->hostName))
