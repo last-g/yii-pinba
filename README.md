@@ -2,9 +2,10 @@ yii-pinba -- Pinba extension for Yii
 ====================================
 
 Simple Yii extension that incapsulates Pinba configuration and methods
-----------------------------------------------------------------------
+
 
 To enable this extensin you need add Pinba to component list in *config.php* and do some simple configurations
+
     'pinba' => array(
         'class' => ext.yii-pinba.Pinba,
         // Whethe extension should be enabled
